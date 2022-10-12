@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 const express = require('express');
 
 const PORT = process.env.PORT || 3001;
@@ -28,8 +31,24 @@ function findById(id, notesArray) {
 };
 
 function createNewNote(body, notesArray) {
-    console.log(body);
-    return body;
+    const note = body;
+    notesArray.push(note);
+    fs.writeFileSync(
+        path.join(__dirname, './public/data/notes.json'),
+        JSON.stringify({ notes: notesArray }, null, 2)
+    );
+
+    return note;
+};
+
+function validateNote(note) {
+    if (!note.title || typeof note.title !== 'string') {
+        return false;
+    }
+    if (!note.entry || typeof note.entry !== 'string') {
+        return false;
+    }
+    return true;
 };
 
 app.get('/api/notes', (req, res) => {
@@ -37,7 +56,7 @@ app.get('/api/notes', (req, res) => {
     if (req.query) {
         results = filterByQuery(req.query, results);
     }
-    res.json(results)
+    res.json(results);
 });
 
 app.get('/api/notes/:id', (req, res) => {
@@ -50,8 +69,11 @@ app.get('/api/notes/:id', (req, res) => {
 });
 
 app.post('/api/notes', (req, res) => {
-    console.log(req.body);
-    res.json(req.body);
+    req.body.id = notes.length.toString();
+
+    const note = createNewNote(req.body, notes);
+
+    res.json(note);
 });
 
 app.listen(PORT, ()=> {
