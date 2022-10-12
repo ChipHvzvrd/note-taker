@@ -4,16 +4,27 @@ const PORT = process.env.PORT || 3001;
 
 const app = express();
 
-const { note } = require('./public/models/Note');
+const { notes } = require('./public/data/notes');
 
-function findById(id, notesArray) {
-    const result = notesArray.filter(notes => notes.id === id)[0];
-    return result;
-}
+function filterByQuery(query, notesArray) {
+    let filteredResults = notesArray;
+    if (query.title) {
+        filteredResults = filteredResults.filter(notes => notes.title === query.title);
+    }
+    if (query.entry) {
+        filteredResults = filteredResults.filter(notes => notes.entry === query.entry);
+    }
+
+    return filteredResults;
+};
 
 app.get('/api/notes', (req, res) => {
-    res.send('Some Data');
-})
+    let results = notes;
+    if (req.query) {
+        results = filterByQuery(req.query, results);
+    }
+    res.json(results)
+});
 
 app.get('/api/notes/id:', (req, res) => {
     const result = findById(req.params.id, notes);
@@ -22,8 +33,8 @@ app.get('/api/notes/id:', (req, res) => {
     } else {
         res.send(404);
     }
-})
+});
 
 app.listen(PORT, ()=> {
     console.log(`server is now running`);
-})
+});
