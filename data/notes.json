@@ -1,0 +1,29 @@
+{
+  "notes": [
+    {
+      "id": "0",
+      "title": "Todo: newSong-Me",
+      "text": "Need to add cut highs"
+    },
+    {
+      "id": "1",
+      "title": "New song 08/22",
+      "text": "Add melody and layer the bass"
+    },
+    {
+      "id": "2",
+      "title": "Music tips",
+      "text": "Seek inspiration from other artists if possible"
+    },
+    {
+      "title": "New remix",
+      "text": "need to remix this new song",
+      "id": "3"
+    },
+    {
+      "title": "Hello",
+      "text": "New Note\n",
+      "id": "4"
+    }
+  ]
+}

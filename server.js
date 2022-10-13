@@ -11,7 +11,9 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json());
 
-const { notes } = require('./public/data/notes');
+app.use(express.static('public'));
+
+const { notes } = require('./data/notes');
 
 function filterByQuery(query, notesArray) {
     let filteredResults = notesArray;
@@ -19,7 +21,7 @@ function filterByQuery(query, notesArray) {
         filteredResults = filteredResults.filter(notes => notes.title === query.title);
     }
     if (query.entry) {
-        filteredResults = filteredResults.filter(notes => notes.entry === query.entry);
+        filteredResults = filteredResults.filter(notes => notes.text === query.text);
     }
 
     return filteredResults;
@@ -34,7 +36,7 @@ function createNewNote(body, notesArray) {
     const note = body;
     notesArray.push(note);
     fs.writeFileSync(
-        path.join(__dirname, './public/data/notes.json'),
+        path.join(__dirname, './data/notes.json'),
         JSON.stringify({ notes: notesArray }, null, 2)
     );
 
@@ -45,7 +47,7 @@ function validateNote(note) {
     if (!note.title || typeof note.title !== 'string') {
         return false;
     }
-    if (!note.entry || typeof note.entry !== 'string') {
+    if (!note.text || typeof note.text !== 'string') {
         return false;
     }
     return true;
@@ -71,11 +73,23 @@ app.get('/api/notes/:id', (req, res) => {
 app.post('/api/notes', (req, res) => {
     req.body.id = notes.length.toString();
 
-    const note = createNewNote(req.body, notes);
+    if (!validateNote(req.body)) {
+        res.status(400).send('__Data is invalid__');
+    } else {
+        const note = createNewNote(req.body, notes);
+        res.json(note);
+    }
+});
 
-    res.json(note);
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+});
+
+app.get('/notes', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/notes.html'));
 });
 
 app.listen(PORT, ()=> {
     console.log(`server is now running`);
 });
+
