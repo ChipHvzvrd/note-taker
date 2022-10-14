@@ -1,3 +1,13 @@
+#Note-Taker App
+-This app can add notes using JSON as the "db" and files can be written to this JSON file.
+-Routes included are "GET", "POST", and "DELETE" however delete wasnt finished upon submission.
+-Note-Taker uses express js for the router functionality
+
+#Future functionality
+-I would like to clean up the code to utilize the router() function and have app() be called.
+-I would like to get the DELETE code to work properly.
+
+
 # Note Taker Starter Code
 
 GIVEN a note-taking application
