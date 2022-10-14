@@ -81,6 +81,12 @@ app.post('/api/notes', (req, res) => {
     }
 });
 
+
+// app.delete('api/notes', (req, res) => {
+//     console.log("DELETE request called for notes")
+//     res.send('DELETE request called');
+// });
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, './public/index.html'));
 });
